@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Roadmap Tree</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; }
@@ -15,94 +18,87 @@
 <body>
     <svg width="1200" height="800"></svg>
     <script>
-        const data = {
-            "name": "Roadmap",
+        const treeData = {
+            "name": "Product Roadmap",
             "children": [
-                {
-                    "name": "AI Infrastructure & Automation",
-                    "status": "in-progress",
-                    "children": [
-                        {
-                            "name": "Agentic System",
-                            "status": "in-progress",
-                            "children": [
-                                {
-                                    "name": "Role-Based Specialisation",
-                                    "status": "in-progress",
-                                    "children": [
-                                        { "name": "Define Agent Roles & Expertise", "status": "done" },
-                                        { "name": "Role-Specific Task Assignment", "status": "in-progress" },
-                                        { "name": "Role-Based Access & Permissions", "status": "not-started" },
-                                        { "name": "Agent Training by Role", "status": "not-started" },
-                                        { "name": "Decision-Making & Escalation Rules", "status": "not-started" }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "Brand DNA",
-                    "status": "in-progress",
-                    "children": [
-                        {
-                            "name": "AI Company Analysis",
-                            "status": "done",
-                            "children": [
-                                { "name": "Overview, Market, Competitors", "status": "done" }
-                            ]
-                        },
-                        {
-                            "name": "Brand Identity Ingestion",
-                            "status": "done",
-                            "children": [
-                                { "name": "Guideline Ingestion", "status": "done" },
-                                { "name": "Logos, Fonts, Graphics", "status": "done" },
-                                { "name": "Colour Palette", "status": "done" },
-                                { "name": "Asset Libraries and Organisation", "status": "done" }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "Campaign Initiation",
-                    "status": "in-progress",
-                    "children": [
-                        { "name": "AI Brief Builder", "status": "in-progress" },
-                        { "name": "AI Brainstorming (Chat)", "status": "not-started" },
-                        { "name": "Brief Upload & Analysis", "status": "in-progress" },
-                        { "name": "Campaign Brief Generation", "status": "in-progress" },
-                        { "name": "Campaign Data Storage & Structuring", "status": "in-progress" }
-                    ]
-                }
+                { "name": "AI Infrastructure & Automation", "status": "in-progress", "children": [
+                    { "name": "Agentic System", "status": "in-progress", "children": [
+                        { "name": "Role-Based Specialisation", "status": "in-progress", "children": [
+                            { "name": "Define Agent Roles & Expertise", "status": "done" },
+                            { "name": "Role-Specific Task Assignment", "status": "in-progress" },
+                            { "name": "Role-Based Access & Permissions", "status": "not-started" },
+                            { "name": "Agent Training by Role", "status": "not-started" },
+                            { "name": "Decision-Making & Escalation Rules", "status": "not-started" }
+                        ] }
+                    ] },
+                    { "name": "ARC System", "status": "in-progress", "children": [
+                        { "name": "RAG", "status": "in-progress", "children": [
+                            { "name": "Brand DNA Retrieval", "status": "not-started" },
+                            { "name": "Brief Ingestion & Structuring", "status": "not-started" },
+                            { "name": "Vectorstore Integration", "status": "not-started" },
+                            { "name": "Automated Data Enrichment", "status": "not-started" }
+                        ] },
+                        { "name": "Adaptive Generation", "status": "in-progress", "children": [
+                            { "name": "Real-Time Performance Adjustments", "status": "not-started" },
+                            { "name": "Historical Campaign Learning", "status": "not-started" },
+                            { "name": "Persona-Driven Optimisation", "status": "not-started" },
+                            { "name": "Multi-Variant Adaptive Testing", "status": "not-started" },
+                            { "name": "Predictive Content Ranking", "status": "not-started" }
+                        ] }
+                    ] },
+                    { "name": "Kubric", "status": "in-progress", "children": [
+                        { "name": "Automated Video Generation", "status": "not-started" },
+                        { "name": "Template-Based Asset Creation", "status": "not-started" },
+                        { "name": "AI-Driven Motion Graphics", "status": "not-started" },
+                        { "name": "Dynamic Scene Adaptation", "status": "not-started" }
+                    ] }
+                ] },
+                { "name": "Brand DNA", "status": "in-progress", "children": [
+                    { "name": "AI Company Analysis", "status": "done" },
+                    { "name": "Brand Identity Ingestion", "status": "done" },
+                    { "name": "PSD Template Creation", "status": "done" },
+                    { "name": "AI Image Annotation", "status": "in-progress" },
+                    { "name": "Ad Training", "status": "in-progress" },
+                    { "name": "Brand Data Structuring & Storing", "status": "done" }
+                ] },
+                { "name": "Campaign Initiation", "status": "in-progress", "children": [
+                    { "name": "AI Brief Builder", "status": "in-progress" },
+                    { "name": "AI Brainstorming (Chat)", "status": "not-started" },
+                    { "name": "Brief Upload & Analysis", "status": "in-progress" },
+                    { "name": "Campaign Brief Generation", "status": "in-progress" },
+                    { "name": "Campaign Data Storage & Structuring", "status": "in-progress" },
+                    { "name": "Campaign Dashboard", "status": "in-progress" }
+                ] }
             ]
         };
 
         const width = 1200, height = 800;
         const svg = d3.select("svg"), g = svg.append("g").attr("transform", "translate(40,40)");
-
+        
         const treeLayout = d3.tree().size([height - 100, width - 200]);
-        const root = d3.hierarchy(data, d => d.children);
+        const root = d3.hierarchy(treeData, d => d.children);
         treeLayout(root);
-
+        
         g.selectAll(".link")
             .data(root.links())
-            .enter().append("path")
+            .enter()
+            .append("path")
             .attr("class", "link")
             .attr("d", d3.linkHorizontal()
                 .x(d => d.y)
                 .y(d => d.x));
-
+        
         const node = g.selectAll(".node")
             .data(root.descendants())
-            .enter().append("g")
+            .enter()
+            .append("g")
             .attr("class", "node")
             .attr("transform", d => `translate(${d.y},${d.x})`);
-
+        
         node.append("circle")
             .attr("r", 6)
             .attr("class", d => d.data.status ? d.data.status : "not-started");
-
+        
         node.append("text")
             .attr("dy", 3)
             .attr("x", d => d.children ? -10 : 10)
