@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Roadmap Tree</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .node circle { stroke: #333; stroke-width: 2px; }
+        .node text { font-size: 12px; }
+        .link { fill: none; stroke: #ccc; stroke-width: 2px; }
+        .done { fill: #28a745; } /* Green for Done */
+        .in-progress { fill: #007bff; } /* Blue for In Progress */
+        .not-started { fill: #ccc; } /* Gray for Not Started */
+    </style>
+</head>
+<body>
+    <svg width="1200" height="800"></svg>
+    <script>
+        const treeData = {
+            "name": "Product Roadmap",
+            "children": [
+                { "name": "Brand DNA", "status": "in-progress", "children": [
+                    { "name": "AI Company Analysis", "status": "done" },
+                    { "name": "Brand Identity Ingestion", "status": "done" },
+                    { "name": "PSD Template Creation", "status": "done" },
+                    { "name": "AI Image Annotation", "status": "in-progress" },
+                    { "name": "Ad Training", "status": "in-progress" },
+                    { "name": "Brand Data Structuring & Storing", "status": "done" }
+                ] },
+                { "name": "Campaign Initiation", "status": "in-progress", "children": [
+                    { "name": "AI Brief Builder", "status": "in-progress" },
+                    { "name": "AI Brainstorming (Chat)", "status": "not-started" },
+                    { "name": "Brief Upload & Analysis", "status": "in-progress" },
+                    { "name": "Campaign Brief Generation", "status": "in-progress" },
+                    { "name": "Campaign Data Storage & Structuring", "status": "in-progress" },
+                    { "name": "Campaign Dashboard", "status": "in-progress" }
+                ] },
+                { "name": "Creative Strategy & Concept", "status": "in-progress", "children": [
+                    { "name": "Messaging Generation", "status": "done" },
+                    { "name": "Key Visual Compiling", "status": "done" }
+                ] },
+                { "name": "Integrations & External Connections", "status": "in-progress", "children": [
+                    { "name": "Ad & Marketing Platforms", "status": "not-started" },
+                    { "name": "Email Automations", "status": "in-progress" },
+                    { "name": "Web Analytics & Tracking", "status": "not-started" },
+                    { "name": "Creative Generation", "status": "in-progress" },
+                    { "name": "LLMs", "status": "done" },
+                    { "name": "Web Scraping & Data Extraction", "status": "in-progress" }
+                ] },
+                { "name": "AI Infrastructure & Automation", "status": "in-progress", "children": [
+                    { "name": "Agentic System", "status": "in-progress", "children": [
+                        { "name": "Role-Based Specialisation", "status": "in-progress", "children": [
+                            { "name": "Define Agent Roles & Expertise", "status": "done" },
+                            { "name": "Role-Specific Task Assignment", "status": "in-progress" },
+                            { "name": "Role-Based Access & Permissions", "status": "not-started" },
+                            { "name": "Agent Training by Role", "status": "not-started" },
+                            { "name": "Decision-Making & Escalation Rules", "status": "not-started" }
+                        ] },
+                        { "name": "Workflow Management", "status": "in-progress", "children": [
+                            { "name": "Task Handoff Between Agents", "status": "not-started" },
+                            { "name": "Workflow Interruptions & Fail-Safes", "status": "not-started" },
+                            { "name": "User Overrides & Manual Adjustments", "status": "not-started" },
+                            { "name": "Agent Collaboration & Task Dependencies", "status": "not-started" },
+                            { "name": "Automated Workflow Optimisation", "status": "not-started" }
+                        ] }
+                    ] },
+                    { "name": "ARC System", "status": "in-progress", "children": [
+                        { "name": "RAG", "status": "in-progress", "children": [
+                            { "name": "Brand DNA Retrieval", "status": "not-started" },
+                            { "name": "Brief Ingestion & Structuring", "status": "not-started" },
+                            { "name": "Vectorstore Integration", "status": "not-started" },
+                            { "name": "Automated Data Enrichment", "status": "not-started" }
+                        ] },
+                        { "name": "Adaptive Generation", "status": "in-progress", "children": [
+                            { "name": "Real-Time Performance Adjustments", "status": "not-started" },
+                            { "name": "Historical Campaign Learning", "status": "not-started" },
+                            { "name": "Persona-Driven Optimisation", "status": "not-started" },
+                            { "name": "Multi-Variant Adaptive Testing", "status": "not-started" },
+                            { "name": "Predictive Content Ranking", "status": "not-started" }
+                        ] }
+                    ] }
+                ] }
+            ]
+        };
+
+        const width = 1200, height = 800;
+        const svg = d3.select("svg"), g = svg.append("g").attr("transform", "translate(40,40)");
+        
+        const treeLayout = d3.tree().size([height - 100, width - 200]);
+        const root = d3.hierarchy(treeData, d => d.children);
+        treeLayout(root);
+        
+        g.selectAll(".link")
+            .data(root.links())
+            .enter()
+            .append("path")
+            .attr("class", "link")
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x));
+        
+        const node = g.selectAll(".node")
+            .data(root.descendants())
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${d.y},${d.x})`);
+        
+        node.append("circle")
+            .attr("r", 6)
+            .attr("class", d => d.data.status ? d.data.status : "not-started");
+        
+        node.append("text")
+            .attr("dy", 3)
+            .attr("x", d => d.children ? -10 : 10)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name);
+    </script>
+</body>
+</html>
