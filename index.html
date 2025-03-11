@@ -150,6 +150,111 @@
         const g = svg.append("g")
             .attr("transform", "translate(40,40)");
 
+        // Updated csvData array
+        const csvData = [
+            // AI Infrastructure
+            { Function: "AI Infrastructure & Automation", Feature: "Agentic System", Epic: "Role-Based Specialisation", Story: "Define Agent Roles & Expertise", Status: "Done" },
+            { Function: "AI Infrastructure & Automation", Feature: "Agentic System", Epic: "Role-Based Specialisation", Story: "Role-Specific Task Assignment", Status: "In Progress" },
+            { Function: "AI Infrastructure & Automation", Feature: "Agentic System", Epic: "Role-Based Specialisation", Story: "Role-Based Access & Permissions", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "Agentic System", Epic: "Role-Based Specialisation", Story: "Agent Training by Role", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "Agentic System", Epic: "Role-Based Specialisation", Story: "Decision-Making & Escalation Rules", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "ARC System", Epic: "RAG", Story: "Brand DNA Retrieval", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "ARC System", Epic: "RAG", Story: "Brief Ingestion & Structuring", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "ARC System", Epic: "RAG", Story: "Vectorstore Integration", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "ARC System", Epic: "RAG", Story: "Automated Data Enrichment", Status: "Not Started" },
+            { Function: "AI Infrastructure & Automation", Feature: "Kubric", Epic: "Rubric Design", Story: "", Status: "In Progress" },
+            { Function: "AI Infrastructure & Automation", Feature: "Kubric", Epic: "Evaluations", Story: "", Status: "In Progress" },
+            { Function: "AI Infrastructure & Automation", Feature: "Kubric", Epic: "Brand Rubric Development", Story: "", Status: "In Progress" },
+
+            // Campaign Initiation
+            { Function: "Campaign Initiation", Feature: "AI Brief Builder", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Campaign Initiation", Feature: "AI Brainstorming (Chat)", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Campaign Initiation", Feature: "Brief Upload & Analysis", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Campaign Initiation", Feature: "Campaign Brief Generation", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Campaign Initiation", Feature: "Campaign Data Storage & Structuring", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Campaign Initiation", Feature: "Campaign Dashboard", Epic: "", Story: "", Status: "In Progress" },
+
+            // Creative Strategy & Concept
+            { Function: "Creative Strategy & Concept", Feature: "ArcSpace", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Strategy & Concept", Feature: "Concept Generation", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Creative Strategy & Concept", Feature: "Messaging Generation", Epic: "", Story: "", Status: "Done" },
+            { Function: "Creative Strategy & Concept", Feature: "Image Recommendation", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Strategy & Concept", Feature: "Key Visual Compiling", Epic: "", Story: "", Status: "Done" },
+            { Function: "Creative Strategy & Concept", Feature: "Brand & Compliance Guardrails", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Creative Strategy & Concept", Feature: "A/B Testing", Epic: "Live", Story: "", Status: "Not Started" },
+            { Function: "Creative Strategy & Concept", Feature: "A/B Testing", Epic: "Synthetic", Story: "", Status: "Not Started" },
+
+            // Creative Production
+            { Function: "Creative Production", Feature: "Customer Journey Mapping", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Omnichannel", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Multimodal Creative", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Personalisation", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Localisation", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Versioning & History", Epic: "Asset Version Control", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Versioning & History", Epic: "Rollback & Duplication", Story: "", Status: "Not Started" },
+            { Function: "Creative Production", Feature: "Versioning & History", Epic: "Collaborative Editing History", Story: "", Status: "Not Started" },
+
+            // Deployment & Publishing
+            { Function: "Deployment & Publishing", Feature: "Approval Workflows", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Deployment & Publishing", Feature: "Launch Scheduling", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Deployment & Publishing", Feature: "One-Click Publishing", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Deployment & Publishing", Feature: "Automated Deployment Rules", Epic: "", Story: "", Status: "Not Started" },
+
+            // Performance & Optimisation
+            { Function: "Performance & Optimisation", Feature: "Performance Monitoring", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Performance & Optimisation", Feature: "Autonomous Optimisation", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Performance & Optimisation", Feature: "Reporting & Insights", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Performance & Optimisation", Feature: "ARC Learning", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Performance & Optimisation", Feature: "Benchmarking & Competitive Analysis", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Performance & Optimisation", Feature: "Attribution Modelling", Epic: "", Story: "", Status: "Not Started" },
+
+            // Chat Hub
+            { Function: "Chat Hub", Feature: "Contextual Messaging", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Chat Hub", Feature: "In-Chat ArcSpace", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Chat Hub", Feature: "Routing & Task Delegation", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Chat Hub", Feature: "Approval & Feedback Integration", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Chat Hub", Feature: "Threaded Conversations", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Chat Hub", Feature: "Tutorials & Troubleshooting", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Chat Hub", Feature: "Human Escalation", Epic: "", Story: "", Status: "Not Started" },
+
+            // Command Centre (with detailed user management)
+            { Function: "Command Centre", Feature: "User Management", Epic: "Authentication & Access", Story: "Signup & Login", Status: "In Progress" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Signup & Login", Story: "Account Creation", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Signup & Login", Story: "Email Verification", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Signup & Login", Story: "User Login", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Signup & Login", Story: "Persistent Login (Remember Me)", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Signup & Login", Story: "Password Reset Flow", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Multi-brand vs Single Brand", Story: "Multi-brand Account Creation & Switching UI", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Multi-brand vs Single Brand", Story: "Onboarding: Account Type Selection", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Multi-brand vs Single Brand", Story: "Single-brand User Flow", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Team Management", Story: "Define/Select Roles", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Team Management", Story: "Invite Users via Email", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Team Management", Story: "Accept/Decline/Withdraw Invitations", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Team Management", Story: "Remove/Deactivate User", Status: "Not Started" },
+            { Function: "Command Centre", Feature: "User Management", Epic: "Team Management", Story: "Transfer Ownership/Admin Rights", Status: "Not Started" },
+
+            // Integrations
+            { Function: "Integrations & External Connections", Feature: "Ad & Marketing Platforms", Epic: "Omnichannel Publishing", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Ad & Marketing Platforms", Epic: "B2B Platforms", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Ad & Marketing Platforms", Epic: "B2C Platforms", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Email Automations", Epic: "", Story: "", Status: "In Progress" },
+            { Function: "Integrations & External Connections", Feature: "Web Analytics & Tracking", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Content & DAM Integrations", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "ChatHub", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Creative Generation", Epic: "IMG.LY", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "Creative Generation", Epic: "Stock Libraries", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "LLMs", Epic: "OpenAI", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "LLMs", Epic: "Perplexity", Story: "", Status: "Not Started" },
+            { Function: "Integrations & External Connections", Feature: "LLMs", Epic: "Anthropic", Story: "", Status: "Not Started" },
+
+            // UI/UX
+            { Function: "UI/UX", Feature: "Design System & Components", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "UI/UX", Feature: "Wireframing & Prototyping", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "UI/UX", Feature: "Animations & Microinteractions", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "UI/UX", Feature: "UX Testing", Epic: "", Story: "", Status: "Not Started" },
+            { Function: "UI/UX", Feature: "Performance Optimisation", Epic: "", Story: "", Status: "Not Started" }
+        ];
+
         function transformCSVToHierarchy(csvData) {
             const root = {
                 name: "Product Roadmap",
@@ -315,37 +420,6 @@
                    .scale(scale));
         }
 
-        async function loadAllCSVs() {
-            const csvFiles = [
-                'attached_assets/1 AI-Roadmap > AI Infrastructure.csv',
-                'attached_assets/3 Initiation-Roadmap > Initiation.csv',
-                'attached_assets/4 Concept-Roadmap > Strategy & Concept.csv',
-                'attached_assets/5 Production-Roadmap > Production.csv',
-                'attached_assets/6 Deployment-Roadmap > Deployment.csv',
-                'attached_assets/7 Performance-Roadmap > Performance & Optimisation.csv',
-                'attached_assets/8 Chat-Roadmap > ChatHub.csv',
-                'attached_assets/9 Command-Roadmap > Command Centre.csv',
-                'attached_assets/11 Integrations-Roadmap > Integrations.csv',
-                'attached_assets/12 UIUX-Roadmap > UI UX.csv'
-            ];
-
-            try {
-                const allData = [];
-                for (const file of csvFiles) {
-                    const response = await fetch(file);
-                    const csvText = await response.text();
-                    const csvData = d3.csvParse(csvText);
-                    allData.push(...csvData);
-                }
-                const hierarchicalData = transformCSVToHierarchy(allData);
-                updateVisualization(hierarchicalData);
-            } catch (error) {
-                console.error('Error loading CSV files:', error);
-            }
-        }
-
-        loadAllCSVs();
-
         window.addEventListener('resize', () => {
             width = container.clientWidth;
             height = container.clientHeight;
@@ -358,6 +432,10 @@
                 updateVisualization(hierarchy.data);
             }
         });
+
+        // Initialize visualization with updated data
+        const hierarchicalData = transformCSVToHierarchy(csvData);
+        updateVisualization(hierarchicalData);
     </script>
 </body>
 </html>
