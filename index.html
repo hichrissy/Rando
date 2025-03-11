@@ -13,60 +13,112 @@
             overflow: hidden;
             width: 100vw;
             height: 100vh;
+            background: #f8f9fa;
         }
 
         #container {
             width: 100%;
             height: 100%;
-            overflow: auto;
+            overflow: hidden;
         }
 
         .node circle {
-            stroke: #333;
+            stroke: #fff;
             stroke-width: 2px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .node text {
             font-size: 12px;
             font-weight: 500;
+            fill: #333;
+            transition: all 0.3s ease;
         }
 
         .link {
             fill: none;
-            stroke: #ccc;
+            stroke: #e9ecef;
             stroke-width: 1.5px;
+            transition: all 0.3s ease;
         }
 
-        .done {
-            fill: #28a745;
+        .node:hover circle {
+            transform: scale(1.2);
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
         }
 
-        .in-progress {
-            fill: #007bff;
+        .node:hover text {
+            font-weight: 600;
+            font-size: 13px;
         }
 
-        .not-started {
-            fill: #ccc;
+        /* Status colors with hover effects */
+        .Done, .done { 
+            fill: #2ecc71;
+            transition: fill 0.3s ease;
+        }
+        .Done:hover, .done:hover { 
+            fill: #27ae60; 
         }
 
-        /* Mobile optimizations */
+        .In.Progress, .in-progress { 
+            fill: #3498db;
+            transition: fill 0.3s ease;
+        }
+        .In.Progress:hover, .in-progress:hover { 
+            fill: #2980b9; 
+        }
+
+        .Not.Started, .not-started { 
+            fill: #95a5a6;
+            transition: fill 0.3s ease;
+        }
+        .Not.Started:hover, .not-started:hover { 
+            fill: #7f8c8d; 
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .node.parent-hover circle {
+            animation: pulse 1s infinite;
+        }
+
+        .link.highlighted {
+            stroke: #3498db;
+            stroke-width: 2.5px;
+            opacity: 0.8;
+        }
+
         @media (max-width: 768px) {
             .node text {
                 font-size: 10px;
             }
         }
 
-        /* Tooltip styles */
         .tooltip {
             position: absolute;
-            padding: 8px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-radius: 4px;
+            padding: 10px 15px;
+            background: #fff;
+            color: #333;
+            border-radius: 6px;
             font-size: 12px;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 200px;
+        }
+
+        .tooltip .status {
+            margin-top: 5px;
+            font-weight: 500;
+            color: #666;
         }
     </style>
 </head>
@@ -75,206 +127,237 @@
         <svg id="roadmap"></svg>
     </div>
     <script>
-        // Tree data structure
-        const treeData = {
-            "name": "Product Roadmap",
-            "children": [
-                {
-                    "name": "AI Infrastructure & Automation",
-                    "status": "in-progress",
-                    "children": [
-                        {
-                            "name": "Agentic System",
-                            "status": "in-progress",
-                            "children": [
-                                {
-                                    "name": "Role-Based Specialisation",
-                                    "status": "in-progress",
-                                    "children": [
-                                        { "name": "Define Agent Roles & Expertise", "status": "done" },
-                                        { "name": "Role-Specific Task Assignment", "status": "in-progress" },
-                                        { "name": "Role-Based Access & Permissions", "status": "not-started" },
-                                        { "name": "Agent Training by Role", "status": "not-started" },
-                                        { "name": "Decision-Making & Escalation Rules", "status": "not-started" }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "ARC System",
-                            "status": "in-progress",
-                            "children": [
-                                {
-                                    "name": "RAG",
-                                    "status": "in-progress",
-                                    "children": [
-                                        { "name": "Brand DNA Retrieval", "status": "not-started" },
-                                        { "name": "Brief Ingestion & Structuring", "status": "not-started" },
-                                        { "name": "Vectorstore Integration", "status": "not-started" },
-                                        { "name": "Automated Data Enrichment", "status": "not-started" }
-                                    ]
-                                },
-                                {
-                                    "name": "Adaptive Generation",
-                                    "status": "in-progress",
-                                    "children": [
-                                        { "name": "Real-Time Performance Adjustments", "status": "not-started" },
-                                        { "name": "Historical Campaign Learning", "status": "not-started" },
-                                        { "name": "Persona-Driven Optimisation", "status": "not-started" },
-                                        { "name": "Multi-Variant Adaptive Testing", "status": "not-started" },
-                                        { "name": "Predictive Content Ranking", "status": "not-started" }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "name": "Kubric",
-                            "status": "in-progress",
-                            "children": [
-                                { "name": "Automated Video Generation", "status": "not-started" },
-                                { "name": "Template-Based Asset Creation", "status": "not-started" },
-                                { "name": "AI-Driven Motion Graphics", "status": "not-started" },
-                                { "name": "Dynamic Scene Adaptation", "status": "not-started" }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "Brand DNA",
-                    "status": "in-progress",
-                    "children": [
-                        { "name": "AI Company Analysis", "status": "done" },
-                        { "name": "Brand Identity Ingestion", "status": "done" },
-                        { "name": "PSD Template Creation", "status": "done" },
-                        { "name": "AI Image Annotation", "status": "in-progress" },
-                        { "name": "Ad Training", "status": "in-progress" },
-                        { "name": "Brand Data Structuring & Storing", "status": "done" }
-                    ]
-                },
-                {
-                    "name": "Campaign Initiation",
-                    "status": "in-progress",
-                    "children": [
-                        { "name": "AI Brief Builder", "status": "in-progress" },
-                        { "name": "AI Brainstorming (Chat)", "status": "not-started" },
-                        { "name": "Brief Upload & Analysis", "status": "in-progress" },
-                        { "name": "Campaign Brief Generation", "status": "in-progress" },
-                        { "name": "Campaign Data Storage & Structuring", "status": "in-progress" },
-                        { "name": "Campaign Dashboard", "status": "in-progress" }
-                    ]
-                }
-            ]
-        };
-
-        // Set up the SVG container
         const container = document.getElementById('container');
         const svg = d3.select("#roadmap");
         const tooltip = d3.select("body")
             .append("div")
             .attr("class", "tooltip");
 
-        // Calculate initial dimensions
         let width = container.clientWidth;
         let height = container.clientHeight;
 
-        // Update SVG dimensions
         svg.attr("width", width)
            .attr("height", height);
 
-        // Create zoom behavior
         const zoom = d3.zoom()
             .scaleExtent([0.1, 3])
             .on("zoom", (event) => {
                 g.attr("transform", event.transform);
             });
 
-        // Apply zoom to SVG
         svg.call(zoom);
 
-        // Create the main group element
         const g = svg.append("g")
             .attr("transform", "translate(40,40)");
 
-        // Create the tree layout
-        const treeLayout = d3.tree()
-            .size([height - 80, width - 160]);
+        function transformCSVToHierarchy(csvData) {
+            const root = {
+                name: "Product Roadmap",
+                status: "in-progress",
+                children: []
+            };
 
-        // Create the root hierarchy
-        const root = d3.hierarchy(treeData, d => d.children);
+            const functionGroups = d3.group(csvData, d => d.Function);
 
-        // Generate the tree layout
-        treeLayout(root);
+            functionGroups.forEach((functionItems, functionName) => {
+                const functionNode = {
+                    name: functionName,
+                    status: calculateGroupStatus(functionItems),
+                    children: []
+                };
 
-        // Create the links
-        const links = g.selectAll(".link")
-            .data(root.links())
-            .enter()
-            .append("path")
-            .attr("class", "link")
-            .attr("d", d3.linkHorizontal()
-                .x(d => d.y)
-                .y(d => d.x));
+                const featureGroups = d3.group(functionItems, d => d.Feature);
 
-        // Create the nodes
-        const nodes = g.selectAll(".node")
-            .data(root.descendants())
-            .enter()
-            .append("g")
-            .attr("class", "node")
-            .attr("transform", d => `translate(${d.y},${d.x})`);
+                featureGroups.forEach((featureItems, featureName) => {
+                    if (featureName === functionName) return;
 
-        // Add circles to nodes
-        nodes.append("circle")
-            .attr("r", 6)
-            .attr("class", d => d.data.status || "not-started")
-            .on("mouseover", (event, d) => {
-                tooltip.style("opacity", 1)
-                    .html(`Status: ${d.data.status || "not-started"}`)
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 10) + "px");
-            })
-            .on("mouseout", () => {
-                tooltip.style("opacity", 0);
+                    const featureNode = {
+                        name: featureName,
+                        status: calculateGroupStatus(featureItems),
+                        children: []
+                    };
+
+                    if (featureItems[0].Epic) {
+                        const epicGroups = d3.group(featureItems, d => d.Epic);
+
+                        epicGroups.forEach((epicItems, epicName) => {
+                            if (epicName) {
+                                const epicNode = {
+                                    name: epicName,
+                                    status: calculateGroupStatus(epicItems),
+                                    children: []
+                                };
+
+                                epicItems.forEach(item => {
+                                    if (item.Story) {
+                                        epicNode.children.push({
+                                            name: item.Story,
+                                            status: item.Status.toLowerCase().replace(' ', '-')
+                                        });
+                                    }
+                                });
+
+                                if (epicNode.children.length > 0) {
+                                    featureNode.children.push(epicNode);
+                                }
+                            }
+                        });
+                    }
+
+                    if (featureNode.children.length === 0) {
+                        featureItems.forEach(item => {
+                            if (!item.Epic && !item.Story) {
+                                featureNode.status = item.Status.toLowerCase().replace(' ', '-');
+                            }
+                        });
+                    }
+
+                    functionNode.children.push(featureNode);
+                });
+
+                if (functionNode.children.length > 0) {
+                    root.children.push(functionNode);
+                }
             });
 
-        // Add text labels to nodes
-        nodes.append("text")
-            .attr("dy", "0.31em")
-            .attr("x", d => d.children ? -10 : 10)
-            .style("text-anchor", d => d.children ? "end" : "start")
-            .text(d => d.data.name);
+            return root;
+        }
 
-        // Handle window resizing
+        function calculateGroupStatus(items) {
+            const statuses = items.map(d => d.Status.toLowerCase().replace(' ', '-'));
+            if (statuses.includes('done')) return 'done';
+            if (statuses.includes('in-progress')) return 'in-progress';
+            return 'not-started';
+        }
+
+        function updateVisualization(root) {
+            g.selectAll("*").remove();
+
+            const treeLayout = d3.tree()
+                .size([height * 3, width * 4])
+                .separation((a, b) => {
+                    return (a.parent === b.parent ? 4 : 6);
+                });
+
+            const hierarchy = d3.hierarchy(root);
+            treeLayout(hierarchy);
+
+            const links = g.selectAll(".link")
+                .data(hierarchy.links())
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x))
+                .on("mouseover", (event, d) => {
+                    d3.select(event.target).classed("highlighted", true);
+                    d3.selectAll(".node").filter(n => 
+                        n === d.target || n === d.source
+                    ).classed("parent-hover", true);
+                })
+                .on("mouseout", (event, d) => {
+                    d3.select(event.target).classed("highlighted", false);
+                    d3.selectAll(".node").classed("parent-hover", false);
+                });
+
+            const nodes = g.selectAll(".node")
+                .data(hierarchy.descendants())
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            nodes.append("circle")
+                .attr("r", d => d.children ? 8 : 6)
+                .attr("class", d => d.data.status || "not-started")
+                .on("mouseover", (event, d) => {
+                    tooltip.style("opacity", 1)
+                        .html(`
+                            <div><strong>${d.data.name}</strong></div>
+                            <div class="status">Status: ${d.data.status || "not-started"}</div>
+                        `)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 10) + "px");
+                })
+                .on("mouseout", () => {
+                    tooltip.style("opacity", 0);
+                });
+
+            nodes.append("text")
+                .attr("dy", "0.31em")
+                .attr("x", d => d.children ? -20 : 20)
+                .style("text-anchor", d => d.children ? "end" : "start")
+                .text(d => d.data.name)
+                .each(function(d) {
+                    const textLength = this.getComputedTextLength();
+                    const maxLength = 300;
+                    if (textLength > maxLength) {
+                        let text = d.data.name;
+                        while (this.getComputedTextLength() > maxLength) {
+                            text = text.slice(0, -1);
+                            d3.select(this).text(text + "...");
+                        }
+                    }
+                });
+
+            const bounds = g.node().getBBox();
+            const fullWidth = bounds.width;
+            const fullHeight = bounds.height;
+            const scale = Math.min(width / fullWidth, height / fullHeight) * 0.75;
+            const translateX = (width - fullWidth * scale) / 2;
+            const translateY = (height - fullHeight * scale) / 2;
+
+            svg.transition()
+               .duration(750)
+               .call(zoom.transform, d3.zoomIdentity
+                   .translate(translateX, translateY)
+                   .scale(scale));
+        }
+
+        async function loadAllCSVs() {
+            const csvFiles = [
+                'attached_assets/1 AI-Roadmap > AI Infrastructure.csv',
+                'attached_assets/3 Initiation-Roadmap > Initiation.csv',
+                'attached_assets/4 Concept-Roadmap > Strategy & Concept.csv',
+                'attached_assets/5 Production-Roadmap > Production.csv',
+                'attached_assets/6 Deployment-Roadmap > Deployment.csv',
+                'attached_assets/7 Performance-Roadmap > Performance & Optimisation.csv',
+                'attached_assets/8 Chat-Roadmap > ChatHub.csv',
+                'attached_assets/9 Command-Roadmap > Command Centre.csv',
+                'attached_assets/11 Integrations-Roadmap > Integrations.csv',
+                'attached_assets/12 UIUX-Roadmap > UI UX.csv'
+            ];
+
+            try {
+                const allData = [];
+                for (const file of csvFiles) {
+                    const response = await fetch(file);
+                    const csvText = await response.text();
+                    const csvData = d3.csvParse(csvText);
+                    allData.push(...csvData);
+                }
+                const hierarchicalData = transformCSVToHierarchy(allData);
+                updateVisualization(hierarchicalData);
+            } catch (error) {
+                console.error('Error loading CSV files:', error);
+            }
+        }
+
+        loadAllCSVs();
+
         window.addEventListener('resize', () => {
             width = container.clientWidth;
             height = container.clientHeight;
-            
+
             svg.attr("width", width)
                .attr("height", height);
-            
-            treeLayout.size([height - 80, width - 160]);
-            treeLayout(root);
 
-            // Update links
-            links.attr("d", d3.linkHorizontal()
-                .x(d => d.y)
-                .y(d => d.x));
-
-            // Update nodes
-            nodes.attr("transform", d => `translate(${d.y},${d.x})`);
+            const hierarchy = g.selectAll(".node").data()[0];
+            if (hierarchy) {
+                updateVisualization(hierarchy.data);
+            }
         });
-
-        // Initial zoom to fit
-        const bounds = g.node().getBBox();
-        const fullWidth = bounds.width;
-        const fullHeight = bounds.height;
-        const scale = Math.min(width / fullWidth, height / fullHeight) * 0.9;
-        const translateX = (width - fullWidth * scale) / 2;
-        const translateY = (height - fullHeight * scale) / 2;
-
-        svg.call(zoom.transform, d3.zoomIdentity
-            .translate(translateX, translateY)
-            .scale(scale));
     </script>
 </body>
 </html>
